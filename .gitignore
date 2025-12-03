@@ -3,3 +3,6 @@ node_modules/
 
 # File name kei baad kuch nhi.
 .env
+
+# for Backend push on github no need frontend files.
+Public/
