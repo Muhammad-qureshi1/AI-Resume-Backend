@@ -1,0 +1,5 @@
+# Folder name kei baad forward slash and new line
+node_modules/
+
+# File name kei baad kuch nhi.
+.env
