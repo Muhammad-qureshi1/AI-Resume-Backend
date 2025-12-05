@@ -1,32 +1,51 @@
 const SchemaUser = require('../DB/schema');
-
+const bcryptjs = require('bcryptjs');
+const saltRounds = 10;
 // SIGNUP function
 const  signup = async (req, res) => {
     try{
 
-    
     const { name, email, password } = req.body;
     console.log(name);
 
     const existingUser = await SchemaUser.findOne({ email });
     if (existingUser) {
-        return res.send({ 
-            status: 505,
-            message: "Email already exists, try another email" });
-    }
+    return res.status(400).json({ 
+        message: "Email already exists, try another email" 
+    });
+}
+    // if (existingUser) {
+    //     return res.send({ 
+    //         status: 400,
+    //         message: "Email already exists, try another email" });
+    // }
+    
+    // Bcryptjs Password encryption or Hashing
+    // await bcryptjs.genSalt(saltRounds, function (err, salt){
+    //     bcryptjs.hash(password, salt, function(err, hash) {
 
-    // New user save
-    const user = { name, email, password };
-    const result = new SchemaUser(user).save();
+      // 1️⃣ Salt generate karo
+    // const salt = await bcryptjs.genSalt(saltRounds);
 
+    // // 2️⃣ Password hash karo
+    // const hash = await bcryptjs.hash(password, salt);
+
+    bcryptjs.genSalt(saltRounds, function(err, salt){
+        bcryptjs.hash(password, salt, function(err, hash){
+            const user = { name, email, password: hash };
+    console.log("Hashed Password", hash);
+
+     // New user save in MongoDB 
+    const result =  new SchemaUser(user).save();
+    console.log(result);
     return res.send({ 
         result,
         status: 200,
         message: `${ name } Signup Successfully!` });
-    
-}
- 
-catch (err) {
+        })  
+    })  
+
+} catch (err) {
     console.log("Signup auth.js Error" , err);
     return res.send({
         status: 500,
@@ -40,7 +59,6 @@ catch (err) {
 const login = async (req, res) => {
     try{
 
-    
     const { email, password } = req.body;
 
     if (!email || !password) {

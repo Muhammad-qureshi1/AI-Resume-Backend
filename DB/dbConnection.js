@@ -10,7 +10,7 @@ async function dbCon() {
     try {
 
         const db = await mongoose.connect(process.env.DB)
-            .then(() => console.log("Database Connected"))
+            .then(() => console.log("MongoDB Connected  Successfully."))
             .catch((err) => console.log(`Connection Faild ${err}`))
 
         mongoose.connection.on('connected', () =>
